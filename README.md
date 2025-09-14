@@ -25,27 +25,24 @@ npm install
 npm run dev
 ```
 
-Opens at http://localhost:5173
+- Opens at http://localhost:5173
 
-Build
-bash
+# Build
+```bash
 Copy code
 npm run build
 npm run preview
-Wordlist (optional)
-Place file at: public/wordlistpw.txt
+```
 
-Loaded via: fetch("/wordlistpw.txt")
+# Wordlist (optional)
 
-Format: one word per line (or adjust your parser)
+- Place file at: public/wordlistpw.txt
+- Loaded via: fetch("/wordlistpw.txt")
+- Format: one word per line (or adjust your parser)
 
-Notes
-Don’t commit node_modules/ (use .gitignore)
+# Notes
 
-If TypeScript flags JSX types, ensure:
-
-@types/react, @types/react-dom are installed
-
-tsconfig.json has "jsx": "react-jsx" and includes "vite/client" in types
-
-Security tip: avoid keeping real passwords in history beyond session needs
+- Don’t commit node_modules/ (use .gitignore)
+- Security tip: avoid keeping real passwords in history beyond session needs
+- Words are randomly selected form EFF diceware wordlist
+- Certain vulgar words are blacklisted (ex: murder)
