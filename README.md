@@ -23,6 +23,8 @@ A React + TypeScript (Vite) app that creates strong, customizable passwords. Tog
 ```bash
 npm install
 npm run dev
+```
+
 Opens at http://localhost:5173
 
 Build
