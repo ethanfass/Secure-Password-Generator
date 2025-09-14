@@ -1,74 +1,49 @@
-<<<<<<< HEAD
-# Secure-Password-Generator
-A customizable password generator that creates secure, random passwords tailored to user preferences. With options for symbols, numbers, and capitalization, plus features like copy-to-clipboard, history tracking, and dark mode, it makes building strong passwords simple and convenient.
-=======
-# React + TypeScript + Vite
+# Secure Password Generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React + TypeScript (Vite) app that creates strong, customizable passwords. Toggle symbols, numbers, capitalization, set length, copy to clipboard, view history, and switch dark mode.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- Length slider (e.g., 8–64)
+- Toggles: **Symbols**, **Numbers**, **Capital Letters**
+- One-click **Copy** with visual feedback
+- **History** of recently generated passwords
+- **Dark Mode** saved to localStorage
+- Optional wordlist support (diceware-style)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tech Stack
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Frontend: React, TypeScript, Vite
+- Styling: CSS (or your preferred framework)
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+# Setup
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+```bash
+npm install
+npm run dev
+Opens at http://localhost:5173
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Build
+bash
+Copy code
+npm run build
+npm run preview
+Wordlist (optional)
+Place file at: public/wordlistpw.txt
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Loaded via: fetch("/wordlistpw.txt")
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
->>>>>>> 907399a (first commit)
+Format: one word per line (or adjust your parser)
+
+Notes
+Don’t commit node_modules/ (use .gitignore)
+
+If TypeScript flags JSX types, ensure:
+
+@types/react, @types/react-dom are installed
+
+tsconfig.json has "jsx": "react-jsx" and includes "vite/client" in types
+
+Security tip: avoid keeping real passwords in history beyond session needs
