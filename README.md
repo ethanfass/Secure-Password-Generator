@@ -6,11 +6,10 @@ A React + TypeScript (Vite) app that creates strong, customizable passwords. Tog
 
 ## Features
 
-- Length slider (e.g., 8–64)
-- Toggles: **Symbols**, **Numbers**, **Capital Letters**
-- One-click **Copy** with visual feedback
-- **History** of recently generated passwords
-- **Dark Mode** saved to localStorage
+- Toggles: Symbols, Numbers, Capital Letters
+- One-click Copy with visual feedback
+- History of recently generated passwords
+- Dark Mode saved to localStorage
 - Optional wordlist support (diceware-style)
 
 ## Tech Stack
