@@ -18,8 +18,12 @@ export default function App() {
   const copyTimerRef = useRef<number | null>(null);
 
   const [history, setHistory] = useState<string[]>([]);
-  const pushHistory = (pw: string) =>
-    setHistory((h) => [pw, ...h]);
+  const pushHistory = (pw: string) => setHistory((h) => [pw, ...h]);
+
+  // Checklist popover state (no inline styles; CSS handles layout)
+  const [showChecklist, setShowChecklist] = useState(false);
+  const checkBtnRef = useRef<HTMLButtonElement | null>(null);
+  const popoverRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     fetch("/wordlistpw.txt")
@@ -80,10 +84,13 @@ export default function App() {
       if ((isDigit && !allowNumbers) || (isSymbol && !allowSymbols)) continue;
       filtered[k] = v;
     }
-    return input.split("").map((ch) => {
-      const repl = filtered[ch.toLowerCase()];
-      return repl && Math.random() < 0.25 ? repl : ch;
-    }).join("");
+    return input
+      .split("")
+      .map((ch) => {
+        const repl = filtered[ch.toLowerCase()];
+        return repl && Math.random() < 0.25 ? repl : ch;
+      })
+      .join("");
   }
 
   const COMMON_PHRASES = [
@@ -166,6 +173,46 @@ export default function App() {
     () => scorePassword(password),
     [password, allowNumbers, allowSymbols, allowCapitals]
   );
+
+  // Checklist items (driven by password)
+  const checklist = useMemo(() => {
+    const pw = password || "";
+    const hasLower  = /[a-z]/.test(pw);
+    const hasUpper  = /[A-Z]/.test(pw);
+    const hasDigit  = /\d/.test(pw);
+    const hasSymbol = /[^A-Za-z0-9]/.test(pw);
+    const length    = pw.length;
+
+    let alphabet = 0;
+    if (hasLower)  alphabet += 26;
+    if (hasUpper)  alphabet += 26;
+    if (hasDigit)  alphabet += 10;
+    if (hasSymbol) alphabet += symbols.length;
+    if (alphabet === 0) alphabet = 1;
+    const bits = length * log2(alphabet);
+
+    const classes = [hasLower, hasUpper, hasDigit, hasSymbol].filter(Boolean).length;
+    const commonPhrase = detectCommonPhrase(pw);
+    const hasRepeat = /(.)\1{2,}/.test(pw);
+    const hasSeq = hasSequentialRun(pw, 4);
+
+    return [
+      { label: "At least 12 characters", ok: length >= 12 },
+      { label: "Contains lowercase (a–z)", ok: hasLower },
+      { label: "Contains uppercase (A–Z)", ok: hasUpper },
+      { label: "Contains a number (0–9)", ok: hasDigit },
+      { label: "Contains a symbol (!@#$…)", ok: hasSymbol },
+      { label: "No common phrases (e.g., “password”)", ok: !commonPhrase },
+      { label: "No 3+ repeating characters (e.g., aaa)", ok: !hasRepeat },
+      { label: "No 4+ sequential runs (abcd/4321)", ok: !hasSeq },
+      { label: "Uses ≥ 3 character classes", ok: classes >= 3 },
+      { label: "Estimated entropy ≥ 60 bits", ok: bits >= 60 },
+    ] as { label: string; ok: boolean }[];
+  }, [password]);
+
+  function toggleChecklist() {
+    setShowChecklist((s) => !s);
+  }
 
   function generateSimplePassword() {
     if (words.length < 2) return;
@@ -366,7 +413,46 @@ export default function App() {
         <button className="simple" onClick={generateSimplePassword}>Simple Password</button>
         <button className="complex" onClick={generateComplexPassword}>Complex Password</button>
         <button className="random" onClick={generateRandomPassword}>Random Password</button>
+
+        {/* Checklist trigger (no inline styles) */}
+        <button
+          className="checklist-btn"
+          ref={checkBtnRef}
+          onClick={toggleChecklist}
+          title="Show password security checklist"
+        >
+          Check security
+        </button>
       </div>
+
+      {/* Checklist popover (CSS controls layout/position) */}
+      {showChecklist && (
+        <div
+          ref={popoverRef}
+          className="checklist-popover"
+          role="dialog"
+          aria-label="Password security checklist"
+        >
+          <div className="checklist-header">
+            <strong>Password Checklist</strong>
+          </div>
+
+          <ul className="checklist-list" role="list">
+            {checklist.map((item, i) => (
+              <li className="checklist-item" key={i}>
+                <span className="checklist-status" aria-hidden="true">
+                  {item.ok ? "✅" : "⬜"}
+                </span>
+                <span className="checklist-label">{item.label}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="checklist-tip">
+            Tip: Aim to satisfy all items for strongest security.
+          </div>
+        </div>
+      )}
 
       <div className="history-box">
         <div className="history-header">Recently Generated Passwords</div>
