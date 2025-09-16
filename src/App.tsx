@@ -1,5 +1,3 @@
-//testing
-
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 
@@ -22,7 +20,6 @@ export default function App() {
   const [history, setHistory] = useState<string[]>([]);
   const pushHistory = (pw: string) => setHistory((h) => [pw, ...h]);
 
-  // Checklist popover state (no inline styles; CSS handles layout)
   const [showChecklist, setShowChecklist] = useState(false);
   const checkBtnRef = useRef<HTMLButtonElement | null>(null);
   const popoverRef = useRef<HTMLDivElement | null>(null);
@@ -176,7 +173,6 @@ export default function App() {
     [password, allowNumbers, allowSymbols, allowCapitals]
   );
 
-  // Checklist items (driven by password)
   const checklist = useMemo(() => {
     const pw = password || "";
     const hasLower  = /[a-z]/.test(pw);
@@ -324,9 +320,18 @@ export default function App() {
     }
   }
 
+  function handleUseHistory(pw: string) {
+    setPassword(pw);
+    setCopied(false);
+  }
+
+  function handleDeleteHistory(idx: number) {
+    setHistory((h) => h.filter((_, i) => i !== idx));
+  }
+
   return (
     <div className="container">
-      <h1 className="app-title">Password Generator</h1>
+      <h1 className="app-title">Secure Password Generator</h1>
 
       <button
         className="mode-toggle"
@@ -416,7 +421,6 @@ export default function App() {
         <button className="complex" onClick={generateComplexPassword}>Complex Password</button>
         <button className="random" onClick={generateRandomPassword}>Random Password</button>
 
-        {/* Checklist trigger (no inline styles) */}
         <button
           className="checklist-btn"
           ref={checkBtnRef}
@@ -427,7 +431,6 @@ export default function App() {
         </button>
       </div>
 
-      {/* Checklist popover (CSS controls layout/position) */}
       {showChecklist && (
         <div
           ref={popoverRef}
@@ -460,13 +463,33 @@ export default function App() {
         <div className="history-header">Recently Generated Passwords</div>
 
         {history.length === 0 ? (
-          <div style={{ padding: 10, color: "#6b7280", fontStyle: "italic" }}>
-            No passwords yet.
-          </div>
+          <div className="history-empty">No passwords yet.</div>
         ) : (
           <ul className="history-list">
             {history.map((pw, idx) => (
-              <li className="history-item" key={`${idx}-${pw}`}>{pw}</li>
+              <li className="history-item" key={`${idx}-${pw}`}>
+                <span className="history-text" title={pw}>{pw}</span>
+                <div className="history-actions">
+                  <button
+                    type="button"
+                    className="history-btn history-btn--use"
+                    aria-label={`Use this password`}
+                    title="Load into password box"
+                    onClick={() => handleUseHistory(pw)}
+                  >
+                    ←
+                  </button>
+                  <button
+                    type="button"
+                    className="history-btn history-btn--delete"
+                    aria-label={`Delete this password`}
+                    title="Delete from history"
+                    onClick={() => handleDeleteHistory(idx)}
+                  >
+                    ×
+                  </button>
+                </div>
+              </li>
             ))}
           </ul>
         )}

@@ -135,7 +135,6 @@ transform: translateY(-50%);
 position: absolute;
 font-family: Verdana, Geneva, Tahoma, sans-serif;
 font-weight: bold;
-
 }
 
 .toggle {
@@ -216,14 +215,16 @@ font-weight: bold;
 position: absolute;
 top: 430px;
 left: 72.5%;
+min-height: 20px;
+margin-top: 6px;
 }
 
 .history-box {
 position: absolute;
 top: 43%;
 transform: translateY(-50%);
-left: 1545px;
-width: 300px;
+left: 1525px;
+width: 355px;
 max-height: 500px;
 overflow-y: auto;
 border: 2px solid black;
@@ -241,7 +242,13 @@ background: #f9f9f9;
 border-bottom: 1px solid #e5e7eb;
 padding: 10px;
 font-weight: 700;
-font-size: 15.2px;
+font-size: 16.5px;
+}
+
+.history-empty {
+padding: 10px;
+color: #6b7280;
+font-style: italic;
 }
 
 .history-list {
@@ -251,13 +258,66 @@ padding: 10px;
 display: grid;
 gap: 6px;
 }
+
 .history-item {
-padding: 8px 10px;
-background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 14px;
+}
+
+.history-text {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.history-actions {
+display: inline-flex;
+gap: 6px;
+flex-shrink: 0;
+}
+
+.history-btn {
+width: 28px;
+height: 28px;
+border-radius: 8px;
 border: 1px solid #e5e7eb;
-border-radius: 6px;
-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-overflow-x: auto;
+background: #f3f4f6;
+color: #000;
+cursor: pointer;
+line-height: 1;
+font-size: 16px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+}
+
+.history-btn:hover { filter: brightness(0.95); }
+.history-btn:focus-visible {
+outline: 2px solid #4f46e5;
+outline-offset: 2px;
+}
+
+.history-btn--delete {
+background: #ef4444;
+border-color: #ef4444;
+color: #fff;
+}
+.history-btn--delete:hover { filter: brightness(0.95); }
+.history-btn--delete:focus-visible {
+outline: 2px solid #ef4444;
+outline-offset: 2px;
 }
 
 .common-warning {
@@ -361,10 +421,41 @@ color: #f2f2f2;
 font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 body.dark .history-item {
+  background: #222;
+  border-color: #333;
+  color: #f2f2f2;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body.dark .history-btn {
+width: 28px;
+height: 28px;
+border-radius: 8px;
+border: 1px solid #333;
 background: #222;
-border-color: #333;
 color: #f2f2f2;
-font-family: Verdana, Geneva, Tahoma, sans-serif;
+cursor: pointer;
+line-height: 1;
+font-size: 16px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+}
+body.dark .history-btn:hover { filter: brightness(1.1); }
+body.dark .history-btn:focus-visible {
+outline: 2px solid #818cf8;
+outline-offset: 2px;
+}
+
+body.dark .history-btn--delete {
+background: #ef4444;
+border-color: #ef4444;
+color: #fff;
+}
+body.dark .history-btn--delete:hover { filter: brightness(1.1); }
+body.dark .history-btn--delete:focus-visible {
+outline: 2px solid #ef4444;
+outline-offset: 2px;
 }
 
 body.dark .simple,
@@ -498,13 +589,15 @@ color: #f2f2f2;
 .simple:hover, .complex:hover, .random:hover,
 .simple:focus, .complex:focus, .random:focus,
 .mode-toggle:hover, .checklist-btn:hover,
-.mode-toggle:focus, .checklist-btn:focus {
-border-color: #000;
-outline: none;
-box-shadow: none;
+.mode-toggle:focus, .checklist-btn:focus,
+.history-btn:hover, .history-btn:focus,
+.history-btn--use:hover, .history-btn--use:focus,
+.history-btn--delete:hover, .history-btn--delete:focus {
+  border-color: #000;
+  outline: none;
+  box-shadow: none;
 }
 
-/* Force neutral light-mode text (no blue tint) */
 body { color: #000; }
 body:not(.dark) .app-title,
 body:not(.dark) .meter-text,
@@ -513,11 +606,9 @@ body:not(.dark) .history-header,
 body:not(.dark) .history-item,
 body:not(.dark) .common-warning { color: #000; }
 
-/* Inputs and placeholder text */
 body:not(.dark) .pw-text { color: #000; border-color: #000; }
 body:not(.dark) .pw-text::placeholder { color: #777; }
 
-/* Buttons (ensure text is black in light mode) */
 body:not(.dark) .simple,
 body:not(.dark) .complex,
 body:not(.dark) .random,
@@ -525,7 +616,6 @@ body:not(.dark) .copy,
 body:not(.dark) .mode-toggle,
 body:not(.dark) .checklist-btn { color: #000; }
 
-/* If Chrome autofill makes inputs look bluish */
 body:not(.dark) input:-webkit-autofill {
   -webkit-text-fill-color: #000;
 }
